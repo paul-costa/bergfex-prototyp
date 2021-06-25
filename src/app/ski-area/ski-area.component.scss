@@ -1,0 +1,135 @@
+// sidenav
+.sidenav-toggle-button-container {
+  text-align: center;
+}
+
+.sidenav-info-button-container {
+  text-align: right;
+  .sidenav-info-button {
+    margin-right: 12px;
+  }
+}
+
+mat-divider {
+  margin: 16px 0;
+}
+
+
+
+.category-sidenav-container {
+  height: calc(100% - 64px);
+}
+
+.category-sidenav-content {
+  display: flex;
+  justify-content: center;
+
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.category-sidenav {
+  padding: 6px;
+}
+
+// category selection
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}
+
+.category-section-container {
+  margin-top: 12px;
+  width: 80%;
+}
+.category-section {
+  width: 80%;
+  margin: 0 10%;
+}
+
+.reset-selection-button, .filter-selection-button {
+  width: 80%;
+  margin: 16px 10% 0 10%;
+}
+
+// stepper
+.category-stepper {
+  width: 80%;
+  margin: 32px 10%;
+}
+
+.actionButtonContainer {
+  text-align: right;
+  margin-right: 12px;
+
+  button {
+    margin: 0 12px;
+  }
+}
+
+
+.single-form, .multiple-form {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.multiple-form {
+  mat-form-field {
+    padding: 0 6px
+  }
+}
+
+
+// table
+.ski-area-table-container {
+  // display: flex;
+  margin: 5% 10%;
+  width: 80%;
+}
+
+table {
+  width: 100%;
+
+  th, td {
+    text-align: center;
+  }
+
+  .lift-icon-table-cell {
+    div {
+      display: inline-block;
+      align-items: center;
+      width: 25%;
+
+      .lift-icon {
+        width: 24px;
+        height: 24px;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .pistes-icon-table-cell {
+    text-align: right;
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    .pistes-difficulty-span {
+      border: 1px solid black;
+      border-radius: 6px;
+      width: 76px;
+      display: inline-block;
+      margin: 2px;
+
+      text-align: center;
+
+      background-color: rgb(50, 50, 50);
+      color: rgb(220, 220, 220);
+
+    }
+  }
+}
+
+.no-filter-warning {
+  color: red;
+  margin: 0 auto;;
+}

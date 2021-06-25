@@ -1,0 +1,234 @@
+<mat-drawer-container class="category-sidenav-container" autosize>
+  <mat-drawer #categorydrawer class="category-sidenav" mode="side" opened>
+    <!-- sidenav controller -->
+    <div class="sidenav-toggle-button-container">
+      <button mat-icon-button (click)="selectCategories = !selectCategories" mat-raised-button color="accent" class="sidenav-toggle-button" [matTooltip]="selectCategories ? 'Minimize filter selection' : 'Maximize filter selection'">
+        <mat-icon>{{selectCategories ? 'close_fullscreen': 'open_in_full'}}</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- sidenav content -->
+    <div *ngIf="selectCategories">
+      <div class="sidenav-info-button-container">
+        <button mat-icon-button (click)="onOpenDialog('filter-select')" color="primary" class="sidenav-info-button" matTooltip="Click for more info regarding the filter selection">
+          <mat-icon>info</mat-icon>
+        </button>
+      </div>
+
+
+      <span class="category-section-container">
+        <div class="category-section" *ngFor="let category of allCategories" [matTooltip]="onGetTooltipForCategory(category.id)">
+          <span class="category-list-section">
+            <mat-checkbox class="category-margin"
+                          [checked]="category.allComplete === undefined ? false : category.allComplete"
+                          [color]="category.color"
+                          [indeterminate]="someComplete(category.id)"
+                          (change)="setAll($event.checked, category.id)">
+              {{category.name}}
+            </mat-checkbox>
+          </span>
+          <span class="category-list-section">
+            <ul>
+              <li *ngFor="let subtask of category.subtasks">
+                <mat-checkbox [(ngModel)]="subtask.completed"
+                              [color]="subtask.color"
+                              (ngModelChange)="updateAllComplete(category.id)">
+                  {{subtask.name}}
+                </mat-checkbox>
+              </li>
+            </ul>
+          </span>
+        </div>
+
+        <button mat-raised-button (click)="onFilterSelection()" class="filter-selection-button" matTooltip="apply filter selection to access stepper" matTooltipPosition="right" color="primary">Filter Selection</button>
+        <button mat-raised-button (click)="onReload()" class="reset-selection-button" matTooltip="reset filter selection to reset stepper" matTooltipPosition="right" color="warn">Reset Selection</button>
+      </span>
+    </div>
+  </mat-drawer>
+
+  <div class="category-sidenav-content">
+    <div class="category-stepper" *ngIf="filterSelected">
+      <mat-horizontal-stepper linear #stepper>
+        <mat-step [stepControl]="altitudeFormGroup" [editable]="true" *ngIf="altitudeFormGroup">
+          <form [formGroup]="altitudeFormGroup" class="single-form">
+            <ng-template matStepLabel>Altitude</ng-template>
+            <mat-form-field>
+              <mat-label>Min. Altitude (in m)</mat-label>
+              <input matInput formControlName="altitude" required>
+            </mat-form-field>
+            <div class="actionButtonContainer">
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="snowHeightFormGroup" [editable]="true" *ngIf="snowHeightFormGroup">
+          <form [formGroup]="snowHeightFormGroup" class="single-form">
+            <ng-template matStepLabel>Snow Height</ng-template>
+            <mat-form-field>
+              <mat-label>Min. Snow Height (in m)</mat-label>
+              <input matInput formControlName="snowHeight" type="number" required>
+            </mat-form-field>
+            <div class="actionButtonContainer">
+              <button mat-raised-button matStepperPrevious color="accent">Back</button>
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="countryFormGroup" [editable]="true" *ngIf="countryFormGroup">
+          <form [formGroup]="countryFormGroup" class="single-form">
+            <ng-template matStepLabel>Country</ng-template>
+            <mat-form-field appearance="fill">
+              <mat-label>Countries</mat-label>
+              <mat-select formControlName="countries" multiple required>
+                <mat-option *ngFor="let country of COUNTRIES" [value]="country">{{country}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="actionButtonContainer">
+              <button mat-raised-button matStepperPrevious color="accent">Back</button>
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+         <mat-step [stepControl]="liftFormGroup" [editable]="true" *ngIf="liftFormGroup">
+          <form [formGroup]="liftFormGroup" class="multiple-form">
+            <ng-template matStepLabel>Lift Facilities</ng-template>
+            <mat-form-field *ngIf="liftControls && liftControls.includes('drag')">
+              <mat-label>Min. number Drag Lifts</mat-label>
+              <input matInput formControlName="drag" type="number">
+            </mat-form-field>
+
+            <mat-form-field *ngIf="liftControls && liftControls.includes('chair')">
+              <mat-label>Min. number Chair Lifts</mat-label>
+              <input matInput formControlName="chair" type="number">
+            </mat-form-field>
+
+            <mat-form-field *ngIf="liftControls && liftControls.includes('cable')">
+                <mat-label>Min. number Cable Lifts</mat-label>
+                <input matInput formControlName="cable" type="number">
+            </mat-form-field>
+
+            <mat-form-field *ngIf="liftControls && liftControls.includes('aerial')">
+              <mat-label>Min. number Aerial Lifts</mat-label>
+              <input matInput formControlName="aerial" type="number">
+            </mat-form-field>
+
+            <div class="actionButtonContainer">
+              <button mat-raised-button matStepperPrevious color="accent">Back</button>
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="pistesFormGroup" [editable]="true" *ngIf="pistesFormGroup">
+          <form [formGroup]="pistesFormGroup" class="multiple-form">
+            <ng-template matStepLabel>Pistes</ng-template>
+            <mat-form-field *ngIf="pistesControls && pistesControls.includes('easy')">
+              <mat-label>Min. length (in km) Easy Pistes</mat-label>
+              <input matInput formControlName="easy" type="number">
+            </mat-form-field>
+
+              <mat-form-field *ngIf="pistesControls && pistesControls.includes('medium')">
+                <mat-label>Min. length (in km) Medium Pistes</mat-label>
+                <input matInput formControlName="medium" type="number">
+              </mat-form-field>
+
+              <mat-form-field *ngIf="pistesControls && pistesControls.includes('difficult')">
+                <mat-label>Min. length (in km) Difficult Pistes</mat-label>
+                <input matInput formControlName="difficult" type="number">
+              </mat-form-field>
+            <div class="actionButtonContainer">
+              <button mat-raised-button matStepperPrevious color="accent">Back</button>
+              <button mat-raised-button matStepperNext color="primary">Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Filter</ng-template>
+          <p>You are now, click below to apply Filter</p>
+          <div class="actionButtonContainer">
+            <button mat-raised-button color="warn" (click)="onReload()">Reset</button>
+            <button mat-raised-button color="primary" (click)="onFilterPistes()">Apply Filter</button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+
+
+    </div>
+
+
+    <div class="ski-area-table-container">
+      <table mat-table *ngIf="skiAreaTableDataSource.length>0" [dataSource]="skiAreaTableDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="snowM">
+          <th mat-header-cell *matHeaderCellDef> Snow Height (in metres) </th>
+          <td mat-cell *matCellDef="let element"> {{element.snowM}} m </td>
+        </ng-container>
+
+        <ng-container matColumnDef="altitudeKM">
+          <th mat-header-cell *matHeaderCellDef> Altitude (in kilometers) </th>
+          <td mat-cell *matCellDef="let element"> {{element.altitudeKM}} km </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef> Country </th>
+          <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="liftFacilities">
+          <th mat-header-cell *matHeaderCellDef> Lift Facilities </th>
+          <td mat-cell class="lift-icon-table-cell" *matCellDef="let element">
+              <div>
+                {{element.liftFacilities.drag}} <img class="lift-icon" src="../../assets/icons/draglift-icon.svg">
+              </div>
+              <div>
+                {{element.liftFacilities.chair}} <img class="lift-icon" src="../../assets/icons/chairlift-icon.svg">
+              </div>
+              <div>
+                {{element.liftFacilities.cable}} <img class="lift-icon" src="../../assets/icons/cablelift-icon.svg">
+              </div>
+              <div>
+                {{element.liftFacilities.aerial}} <img class="lift-icon" src="../../assets/icons/aeriallift-icon.svg">
+              </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pistes">
+          <th mat-header-cell *matHeaderCellDef> Pistes (by difficulty) </th>
+          <td mat-cell class="pistes-icon-table-cell" *matCellDef="let element">
+            <div *ngIf="element.pistes.easyKM">
+              {{element.pistes.easyKM}} km <span class="pistes-difficulty-span">EASY</span>
+            </div>
+            <div *ngIf="element.pistes.mediumKM">
+              {{element.pistes.mediumKM}} km <span class="pistes-difficulty-span">MEDIUM</span>
+            </div>
+            <div *ngIf="element.pistes.difficultKM">
+              {{element.pistes.difficultKM}} km <span class="pistes-difficulty-span">DIFFICULT</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <p class="no-filter-warning" *ngIf="skiAreaTableDataSource.length==0">
+        No known Ski Areas match you filter criteria. Please reset your filter.
+      </p>
+    </div>
+  </div>
+</mat-drawer-container>

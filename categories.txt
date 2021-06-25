@@ -1,0 +1,15 @@
+categories
+    country
+    altitude
+    snow-height
+
+    lift facilities
+        drag
+        chair
+        cable
+        aerial
+
+    pistes
+        easy min-length
+        medium min-length
+        difficult min-length

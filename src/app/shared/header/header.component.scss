@@ -1,0 +1,23 @@
+.bergfex-logo {
+  height: 48px;
+  cursor: pointer;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.search-button {
+  margin-right: 12px;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(50, 50, 50);
+}
+
+.disabled-link {
+  pointer-events: none;
+  cursor: default;
+  color: lightgray;
+}

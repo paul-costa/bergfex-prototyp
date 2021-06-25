@@ -1,0 +1,36 @@
+<mat-toolbar color="primary">
+  <img src="https://vcdn.bergfex.at/images/site/bergfexlogo-header@2x.png" class="bergfex-logo" routerLink="/">
+
+  <span class="spacer"></span>
+
+  <button mat-button class="weather-button" routerLink="/weather">Weather</button>
+
+  <button mat-button [matMenuTriggerFor]="overview">Overview<mat-icon>arrow_drop_down</mat-icon></button>
+  <mat-menu #overview="matMenu">
+    <button mat-menu-item *ngFor="let item of linkCategories.overview"><a [routerLink]="item.route" [ngClass]="{'disabled-link': item.disabled}">{{item.name}}</a></button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="summer">Summer<mat-icon>arrow_drop_down</mat-icon></button>
+  <mat-menu #summer="matMenu">
+    <button mat-menu-item *ngFor="let item of linkCategories.summer"><a [routerLink]="item.route" [ngClass]="{'disabled-link': item.disabled}">{{item.name}}</a></button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="winter">Winter<mat-icon>arrow_drop_down</mat-icon></button>
+  <mat-menu #winter="matMenu">
+    <button mat-menu-item *ngFor="let item of linkCategories.winter"><a [routerLink]="item.route" [ngClass]="{'disabled-link': item.disabled}">{{item.name}}</a></button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="experiences">Experiences<mat-icon>arrow_drop_down</mat-icon></button>
+  <mat-menu #experiences="matMenu">
+    <button mat-menu-item *ngFor="let item of linkCategories.experiences"><a [routerLink]="item.route" [ngClass]="{'disabled-link': item.disabled}">{{item.name}}</a></button>
+  </mat-menu>
+
+  <span class="spacer"></span>
+
+
+  <button mat-icon-button class="search-button">
+    <mat-icon>search</mat-icon>
+  </button>
+
+  <button mat-flat-button color="secondary" class="my-bergfex-button">My Bergfex</button>
+</mat-toolbar>
